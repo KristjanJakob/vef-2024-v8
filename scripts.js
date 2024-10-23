@@ -6,13 +6,53 @@
  * Notar `console.assert` til að athuga hvort föll virki rétt.
  */
 
-import { isString, splitOnWhitespace } from './lib/helpers.js';
+import { findLongestWord, findShortestWord, countVowels, countConsonants, checkPalindrome, reverseString } from './lib/helpers.js'; 
 
-const test = isString('hæ');
-console.log('test er strengur?', test);
+const textareaElement = document.querySelector('#string');
+const formElement = document.querySelector('form');
+const outputElement = document.querySelector('.output');
 
-const stringWithWhitespace = `halló
-\theimur
-hæ`;
-const split = splitOnWhitespace(stringWithWhitespace);
-console.log(split);
+function displayResults(longest, shortest, vowels, consonants, palindrome, reversed) {
+    document.querySelector('.longest').textContent = longest;
+    document.querySelector('.shortest').textContent = shortest;
+    document.querySelector('.vowels').textContent = vowels;
+    document.querySelector('.consonants').textContent = consonants;
+    document.querySelector('.palindrome').textContent = palindrome ? 'er' : 'er ekki';
+    document.querySelector('.reversed').textContent = reversed;
+    outputElement.classList.remove('hidden'); 
+}
+
+function analyzeText(inputText) {
+    const longestWord = findLongestWord(inputText);
+    const shortestWord = findShortestWord(inputText);
+    const vowelsCount = countVowels(inputText);
+    const consonantsCount = countConsonants(inputText);
+    const isPalindrome = checkPalindrome(inputText);
+    const reversedText = reverseString(inputText);
+
+    displayResults(longestWord, shortestWord, vowelsCount, consonantsCount, isPalindrome, reversedText);
+}
+
+function submitHandler(event) {
+    event.preventDefault();
+    const inputText = textareaElement.value;
+    analyzeText(inputText);
+}
+
+function resetHandler(event) {
+    textareaElement.value = '';
+    
+    outputElement.classList.add('hidden');
+}
+
+textareaElement.addEventListener('input', () => {
+    const inputText = textareaElement.value;
+    analyzeText(inputText);
+});
+
+formElement.addEventListener('submit', submitHandler);
+
+formElement.addEventListener('reset', resetHandler);
+
+
+
